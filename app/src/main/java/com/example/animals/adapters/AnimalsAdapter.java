@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.animals.OnItemClickListener;
 import com.example.animals.R;
 import com.example.animals.models.Animal;
 import com.example.animals.models.Continent;
@@ -19,6 +20,7 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Animal> animals;
 
+    private OnItemClickListener clickListener;
     public AnimalsAdapter(List<Animal> animals){this.animals = animals;}
 
     @Override
@@ -77,7 +79,11 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return animals.size();
     }
 
-    class AnimalViewHolder extends RecyclerView.ViewHolder {
+    public void setClickListener(OnItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+    }
+
+    class AnimalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView animalNameTextView;
         TextView animalContinentTextView;
@@ -87,11 +93,17 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             animalNameTextView = itemView.findViewById(R.id.animal_name);
             animalContinentTextView = itemView.findViewById(R.id.animal_continent);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Animal animal) {
             animalNameTextView.setText(animal.getName());
             animalContinentTextView.setText(animal.getContinent().toString());
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (clickListener != null) clickListener.onClick(view, getAbsoluteAdapterPosition());
         }
     }
 

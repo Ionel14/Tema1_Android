@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SecondFragment">
 
+    <TextView
+        android:id="@+id/animal_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wolf"
+        android:textColor="@color/black"
+        android:textSize="44sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/animal_continent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/europe"
+        android:textColor="@color/black"
+        android:textSize="44sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/animal_name" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
