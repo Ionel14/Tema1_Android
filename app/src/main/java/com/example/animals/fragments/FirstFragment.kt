@@ -1,6 +1,7 @@
 package com.example.animals.fragments
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -106,22 +107,12 @@ class FirstFragment : Fragment(), OnItemClickListener {
     override fun onClick(view: View?, position: Int) {
         val animal = animals[position]
 
-        val secFragment = SecondFragment()
-        var animalNameTextView = secFragment.view?.findViewById<TextView>(R.id.animal_name)
-        var animalContinentTextView = secFragment.view?.findViewById<TextView>(R.id.animal_continent)
-        if (animalNameTextView != null) {
-            animalNameTextView.text = animal.name
-        }
-        if (animalContinentTextView != null) {
-            animalContinentTextView.text = animal.continent.toString()
-        }
-        var color = null;
+        val args = Bundle()
 
-        if (view != null) {
-            secFragment.view?.background = view.background
-        }
-        secFragment.onStart()
-        //findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        args.putString("animal_name", animal.name)
+        args.putString("animal_continent", animal.continent.toString())
+
+        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, args)
     }
     override fun onDestroyView() {
         super.onDestroyView()
