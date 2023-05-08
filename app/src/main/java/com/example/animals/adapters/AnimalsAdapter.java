@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.animals.OnItemClickListener;
 import com.example.animals.R;
 import com.example.animals.models.Animal;
-import com.example.animals.models.Continent;
 
 import java.util.List;
 
@@ -33,32 +32,34 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         AnimalViewHolder viewHolder;
-        View view = null;
-        switch (Continent.values()[viewType]) {
-            case Europe: {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_eu, parent, false);
-                break;
-            }
-           case Africa: {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_africa, parent, false);
-                break;
-            }
-            case Asia:
-            {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_asia, parent, false);
-                break;
-            }
-            case America:
-            {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_america, parent, false);
-                break;
-            }
-            case Australia:
-            {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_australia, parent, false);
-                break;
-            }
-        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_item, parent, false);
+
+//        switch (Continent.values()[viewType]) {
+//            case Europe: {
+//                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_eu, parent, false);
+//                break;
+//            }
+//           case Africa: {
+//                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_africa, parent, false);
+//                break;
+//            }
+//            case Asia:
+//            {
+//                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_asia, parent, false);
+//                break;
+//            }
+//            case America:
+//            {
+//                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_america, parent, false);
+//                break;
+//            }
+//            case Australia:
+//            {
+//                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.animal_australia, parent, false);
+//                break;
+//            }
+//        }
+
         viewHolder = new AnimalViewHolder(view);
         return viewHolder;
     }

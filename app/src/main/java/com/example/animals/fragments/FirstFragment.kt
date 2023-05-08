@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation.findNavController
@@ -36,11 +37,6 @@ class FirstFragment : Fragment(), OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        val button = view.findViewById<Button>(R.id.button_first)
-//        button.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
 
         val recycleView = view.findViewById < RecyclerView>(R.id.rv_animals)
 
@@ -102,17 +98,24 @@ class FirstFragment : Fragment(), OnItemClickListener {
         adapter.setClickListener(this)
         val layoutManager = LinearLayoutManager(context)
         recycleView.layoutManager = layoutManager
+
+//        val button = view.findViewById<Button>(R.id.delete_button)
+//
+//        button.setOnClickListener {
+//            animals.remove()
+//        }
+
     }
 
     override fun onClick(view: View?, position: Int) {
-        val animal = animals[position]
-
-        val args = Bundle()
-
-        args.putString("animal_name", animal.name)
-        args.putString("animal_continent", animal.continent.toString())
-
-        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, args)
+//        val animal = animals[position]
+//
+//        val args = Bundle()
+//
+//        args.putString("animal_name", animal.name)
+//        args.putString("animal_continent", animal.continent.toString())
+//
+//        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, args)
     }
     override fun onDestroyView() {
         super.onDestroyView()
