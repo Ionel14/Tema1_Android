@@ -1,8 +1,8 @@
 package com.example.animals.fragments
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
-import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +16,10 @@ import com.example.animals.R
 import com.example.animals.adapters.AnimalsAdapter
 import com.example.animals.models.Animal
 import com.example.animals.models.Continent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -46,58 +50,81 @@ class FirstFragment : Fragment(), OnItemClickListener {
             onClick(it, 1)
         }
 
-        val recycleView = view.findViewById < RecyclerView>(R.id.rv_animals)
+        val recycleView = view.findViewById<RecyclerView>(R.id.rv_animals)
 
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Racoon", Continent.America))
-        animals.add(Animal("Wolf", Continent.Europe))
-        animals.add(Animal("Dragon", Continent.Asia))
-        animals.add(Animal("Zebra", Continent.Africa))
-        animals.add(Animal("Kangaroo", Continent.Australia))
-        animals.add(Animal("Racoon", Continent.America))
+//        val sharedPreferences =
+//            context?.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+//        sharedPreferences?.edit()?.putString("Wolf", "Europe")
+//        sharedPreferences?.edit()?.putString("Dragon", "Asia")
+//        sharedPreferences?.edit()?.putString("Zebra", "America")
+//        sharedPreferences?.edit()?.putString("Kangaroo", "Australia")
+
+        runBlocking {
+            launch(Dispatchers.IO) {
+                val sharedPref = context?.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+                val allData: Map<String, *> = sharedPref?.all as Map<String, *>
+
+                for ((animalName, continent) in allData) {
+                    if (Continent.values().find{ it.toString() == continent} == null){
+                        continue;
+                    }
+                    animals.add(Animal(animalName, Continent.valueOf(continent as String)));
+                }
+            }
+        }
+
+
+
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Racoon", Continent.America))
+//        animals.add(Animal("Wolf", Continent.Europe))
+//        animals.add(Animal("Dragon", Continent.Asia))
+//        animals.add(Animal("Zebra", Continent.Africa))
+//        animals.add(Animal("Kangaroo", Continent.Australia))
+//        animals.add(Animal("Racoon", Continent.America))
 
 
         adapter = AnimalsAdapter(animals)
@@ -120,6 +147,24 @@ class FirstFragment : Fragment(), OnItemClickListener {
         alertDialog.show()
     }
 
+    private fun addAnimalToSharedPreferences(context: Context, animal: Animal) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val sharedPreferences = context.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString(animal.name, animal.continent.toString())
+            editor.apply()
+        }
+    }
+
+    private fun deleteAnimalFromSharedPreferences(context: Context, key: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val sharedPreferences = context.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.remove(key)
+            editor.apply()
+        }
+    }
+
     private fun retrieveDataFromEditText(): Pair<String, String> {
         val animalName = animalNameEditText.text.toString()
         val continent = continentEditText.text.toString()
@@ -135,7 +180,8 @@ class FirstFragment : Fragment(), OnItemClickListener {
                         showInvalidDialog("Name is blank" ,"Please enter a valid name.");
                         return;
                     }
-                    if (Continent.values().find{ it.toString() == continent} == null)
+
+                if (Continent.values().find{ it.toString() == continent} == null)
                 {
                     showInvalidDialog("Invalid continent.", "Please enter a valid continent.");
                     return;
@@ -144,16 +190,20 @@ class FirstFragment : Fragment(), OnItemClickListener {
                 val animal = animals.firstOrNull { it.name.lowercase() == animalName.lowercase() };
                 if (animal != null)
                 {
+                    context?.let { addAnimalToSharedPreferences(it, animal) }
                     animal.continent = Continent.valueOf(continent);
                     adapter.notifyItemChanged(animals.indexOf(animal));
                     return;
                 }
 
-                animals.add(Animal(animalName, Continent.valueOf(continent)))
+                val newAnimal = Animal(animalName, Continent.valueOf(continent));
+                context?.let { addAnimalToSharedPreferences(it, newAnimal) }
+                animals.add(newAnimal)
                 adapter.notifyItemInserted(animals.size - 1)
                 return;
             }
         }
+        context?.let { deleteAnimalFromSharedPreferences(it, animals[position].name) }
         animals.removeAt(position)
         adapter.notifyItemRemoved(position)
     }
