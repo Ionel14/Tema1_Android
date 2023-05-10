@@ -8,4 +8,4 @@ enum class Continent(val key: Int) {
     Australia(4)
 }
 
-class Animal (val name:String, val continent: Continent)
+class Animal (val name:String, var continent: Continent)

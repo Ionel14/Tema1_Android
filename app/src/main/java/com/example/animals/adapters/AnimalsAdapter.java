@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -69,7 +70,6 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if(holder instanceof AnimalViewHolder) {
             Animal animal = (Animal) animals.get(position);
-
             ((AnimalViewHolder)holder).bind(animal);
         }
         Log.e("Adapter", "onBindViewHolder; position=" + position);
@@ -88,13 +88,15 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         TextView animalNameTextView;
         TextView animalContinentTextView;
+        ImageButton deleteButton;
 
         public AnimalViewHolder(@NonNull View itemView) {
             super(itemView);
 
             animalNameTextView = itemView.findViewById(R.id.animal_name);
             animalContinentTextView = itemView.findViewById(R.id.animal_continent);
-            itemView.setOnClickListener(this);
+            deleteButton = itemView.findViewById(R.id.delete_button);
+            deleteButton.setOnClickListener(this);
         }
 
         public void bind(Animal animal) {
