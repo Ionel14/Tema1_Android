@@ -25,7 +25,7 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return animals.get(position).getContinent().getKey();
+        return 0;
     }
 
     @NonNull
@@ -88,7 +88,7 @@ public class AnimalsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         TextView animalNameTextView;
         TextView animalContinentTextView;
-        ImageButton deleteButton;
+        androidx.appcompat.widget.AppCompatButton deleteButton;
 
         public AnimalViewHolder(@NonNull View itemView) {
             super(itemView);

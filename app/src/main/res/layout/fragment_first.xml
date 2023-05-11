@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@id/animal_name_input"
         app:layout_constraintVertical_bias="0"></EditText>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:text="Confirm"
         android:id="@+id/add_button"
         android:layout_width="match_parent"
@@ -46,9 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/continent_input"
-        app:layout_constraintVertical_bias="0"></Button>
-
-
+        app:layout_constraintVertical_bias="0"></androidx.appcompat.widget.AppCompatButton>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_animals"

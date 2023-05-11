@@ -2,6 +2,7 @@ package com.example.animals.fragments
 
 import android.app.AlertDialog
 import android.content.Context
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +12,16 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.animals.OnItemClickListener
 import com.example.animals.R
 import com.example.animals.adapters.AnimalsAdapter
 import com.example.animals.models.Animal
+import com.example.animals.models.AnimalDao
+import com.example.animals.models.AnimalDatabase
 import com.example.animals.models.Continent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -28,7 +32,7 @@ import kotlinx.coroutines.runBlocking
 
 class FirstFragment : Fragment(), OnItemClickListener {
 
-    val animals = ArrayList<Animal>()
+    var animals = ArrayList<Animal>()
     private lateinit var adapter: AnimalsAdapter
     private lateinit var animalNameEditText: EditText
     private lateinit var continentEditText: EditText
@@ -59,20 +63,29 @@ class FirstFragment : Fragment(), OnItemClickListener {
 //        sharedPreferences?.edit()?.putString("Zebra", "America")
 //        sharedPreferences?.edit()?.putString("Kangaroo", "Australia")
 
+//        runBlocking {
+//            launch(Dispatchers.IO) {
+//                val sharedPref = context?.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+//                val allData: Map<String, *> = sharedPref?.all as Map<String, *>
+//
+//                for ((animalName, continent) in allData) {
+//                    if (Continent.values().find{ it.toString() == continent} == null){
+//                        continue;
+//                    }
+//                    animals.add(Animal(animalName, Continent.valueOf(continent as String)));
+//                }
+//            }
+//        }
+
         runBlocking {
             launch(Dispatchers.IO) {
-                val sharedPref = context?.getSharedPreferences("Animals", Context.MODE_PRIVATE)
-                val allData: Map<String, *> = sharedPref?.all as Map<String, *>
 
-                for ((animalName, continent) in allData) {
-                    if (Continent.values().find{ it.toString() == continent} == null){
-                        continue;
-                    }
-                    animals.add(Animal(animalName, Continent.valueOf(continent as String)));
-                }
+                animals = AnimalDatabase.getInstance(context).AnimalDao().getAllAnimals() as ArrayList<Animal>;
             }
         }
-
+//        val thread : Thread = (Runnable {
+//            animals = AnimalDatabase.getInstance(context).AnimalDao().getAllAnimals() as ArrayList<Animal>;
+//        } as Thread)
 
 
 //        animals.add(Animal("Wolf", Continent.Europe))
@@ -148,20 +161,50 @@ class FirstFragment : Fragment(), OnItemClickListener {
     }
 
     private fun addAnimalToSharedPreferences(context: Context, animal: Animal) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val sharedPreferences = context.getSharedPreferences("Animals", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putString(animal.name, animal.continent.toString())
-            editor.apply()
+//        GlobalScope.launch(Dispatchers.IO) {
+//            val sharedPreferences = context.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+//            val editor = sharedPreferences.edit()
+//            editor.putString(animal.name, animal.continent.toString())
+//            editor.apply()
+//        }
+
+        runBlocking {
+            launch(Dispatchers.IO) {
+                AnimalDatabase.getInstance(context).AnimalDao().addAnimal(animal)
+                animals.add( AnimalDatabase.getInstance(context).AnimalDao().getAnimal(animal.name))
+            }
+        }
+
+    }
+
+    private fun deleteAnimalFromSharedPreferences(context: Context, animal: Animal) {
+//        GlobalScope.launch(Dispatchers.IO) {
+//            val sharedPreferences = context.getSharedPreferences("Animals", Context.MODE_PRIVATE)
+//            val editor = sharedPreferences.edit()
+//            editor.remove(key)
+//            editor.apply()
+//        }
+
+        runBlocking {
+            launch(Dispatchers.IO) {
+                AnimalDatabase.getInstance(context).AnimalDao().deleteAnimal(animal)
+            }
         }
     }
 
-    private fun deleteAnimalFromSharedPreferences(context: Context, key: String) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val sharedPreferences = context.getSharedPreferences("Animals", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.remove(key)
-            editor.apply()
+    private fun updateAnimal(animal: Animal) {
+        val updateAnimalTask = UpdateAnimalTask(context)
+        updateAnimalTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, animal)
+    }
+
+    class UpdateAnimalTask(private val context: Context?) : AsyncTask<Animal, Void, Void>() {
+        private lateinit var animalDao: AnimalDao
+
+        override fun doInBackground(vararg animals: Animal): Void? {
+            val animalDatabase = AnimalDatabase.getInstance(context)
+            animalDao = animalDatabase.AnimalDao()
+            animalDao.updateAnimal(animals[0])
+            return null
         }
     }
 
@@ -190,20 +233,19 @@ class FirstFragment : Fragment(), OnItemClickListener {
                 val animal = animals.firstOrNull { it.name.lowercase() == animalName.lowercase() };
                 if (animal != null)
                 {
-                    context?.let { addAnimalToSharedPreferences(it, animal) }
-                    animal.continent = Continent.valueOf(continent);
+                    updateAnimal(animal)
+                    animal.continent = continent;
                     adapter.notifyItemChanged(animals.indexOf(animal));
                     return;
                 }
 
-                val newAnimal = Animal(animalName, Continent.valueOf(continent));
+                val newAnimal = Animal(animalName, continent);
                 context?.let { addAnimalToSharedPreferences(it, newAnimal) }
-                animals.add(newAnimal)
                 adapter.notifyItemInserted(animals.size - 1)
                 return;
             }
         }
-        context?.let { deleteAnimalFromSharedPreferences(it, animals[position].name) }
+        context?.let { deleteAnimalFromSharedPreferences(it, animals[position]) }
         animals.removeAt(position)
         adapter.notifyItemRemoved(position)
     }
